@@ -7,7 +7,7 @@ categories = [] # these are the column headers in the CSV file
 installs = [] # this is the installs row
 ratings = [] # this is the ratings row
 
-with open('data/googeplaystore.csv') as csvfile:
+with open("data/googeplaystore.csv") as csvfile:
     reader = csv.reader(csvfile)
     line_count = 0
 
@@ -19,15 +19,15 @@ with open('data/googeplaystore.csv') as csvfile:
             line_count += 1 # increment the line count for the next loop
         else:
             # grab the rating and push them into the ratings array
-            ratingsData = row [2]
-            ratingsData = ratingsData.replace("Nan", "0")
+            ratingsData = row[2]
+            ratingsData = ratingsData.replace("NaN", "0")
             ratings.append(float(ratingsData)) # int will turn a string (piece of text) ito a number
             # print('pushing ratings data into the ratings array')
             installData = row[5]
             installData = installData.replace(",", "") # get rid of the commas
-
+            installData = installData.replace("Free", "0")
             # get rid of the trailing "+"
-            installs.append(np.char.strip(installData, "+"))
+            installs.append(int(np.char.strip(installData, "+")))
             line_count += 1
 
 # get some values we can work with
@@ -41,7 +41,7 @@ print("popular apps:", len(np_ratings[popular_apps]))
 percent_popular = int(len(np_ratings[popular_apps]) / len(np_ratings) * 100)
 print(percent_popular)
 
-unpopular_apps = np_ratings < 4
+unpopular_apps = np_ratings < 2
 print("popular apps:", len(np_ratings[unpopular_apps]))
 
 percent_unpopular = int(len(np_ratings[unpopular_apps]) / len(np_ratings) * 100)
@@ -61,5 +61,5 @@ plt.pie(sizes, explode=explode, colors=colors, autopct='%1.1f%%', shadow=True, s
 plt.axis('equal')
 plt.legend(labels, loc=1)
 plt.title("Do we love us some apps?")
-plt.xlabel("User Ratings - App Installs (10,000+ apps")
+plt.xlabel("User Ratings - App Installs (10,000 + apps)")
 plt.show()
